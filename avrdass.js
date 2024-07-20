@@ -1,5 +1,4 @@
-var AVRDASS = new function(){let that = this;
-  function from_ihex(str){
+export const from_ihex = (str) => {
     let lines = str.replace(/\r/g, '\n').split('\n').map(x=>x.trim()).filter(x=>x&&x.length).map(x=>x.split(':')[1]);
     let bytes = [];
     let baddr = 0;
@@ -20,7 +19,7 @@ var AVRDASS = new function(){let that = this;
     }
     bytes = bytes.map(x=>(x===undefined)?(0xff):x);
     return bytes;
-  }
+};
 
   function op_match(bytes,op,tmpl,fun){
     tmpl = tmpl.split('').filter(x=>(x!='_')).reverse();
@@ -185,7 +184,7 @@ var AVRDASS = new function(){let that = this;
          ||op_match(bytes,'XCH.Z'  ,'1001_001r_rrrr_0100',({r})=>[R(r)])
   }
 
-  function disass(bytes){
+export const disass = (bytes) => {
     let pc = 0;
     let ret = [];
     while (bytes.length){
@@ -204,14 +203,8 @@ var AVRDASS = new function(){let that = this;
       }
     }
     return ret.join("\n")
-  }
-  that.from_ihex = from_ihex;
-  that.disass = disass;
-  that.hex_to_asm = function(str){
-    return disass(from_ihex(str));
-  }
-}
+};
 
-if (typeof module != "undefined"){
-  module.exports = AVRDASS;
-}
+export const hex_to_asm = (str) => {
+    return disass(from_ihex(str));
+};

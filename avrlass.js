@@ -1,10 +1,10 @@
-var AVRLASS = new function(){let that = this;
-  let device = {
+export const device = {
     name:'',
     instr_set:'any',
     flash_bytes:0,
     ram_start:0x60,
-  }
+};
+
   let keywords = [
     '.EQU','.INCLUDE','.CSEG','.DSEG','.ESEG','.BYTE','.DB','.DW','.DD','.DQ','.ORG','.MACRO','.ENDM','.ENDMACRO','.MESSAGE','.ERROR','.WARNING','.DEVICE','.EXIT','.IF','.ENDIF','.ELSE','.ELIF','.IFDEF','.IFNDEF',
     'ADC','ADD','ADIW','AND','ANDI','ASR',
@@ -248,11 +248,11 @@ var AVRLASS = new function(){let that = this;
     return ['??','??']
   }
 
-  function eval_scoped(js,context) {
-    return function() { with(this) { return eval(js); }; }.call(context);
-  }
+const eval_scoped = (js, context) => {
+    return new Function(`with (this) { return (${js}); }`).call(context);
+};
 
-  function new_context(context){
+export const new_context = (context) => {
     for (let i = 0; i < 32; i++){
       context['R'+i]=i;
     }
@@ -282,8 +282,7 @@ var AVRLASS = new function(){let that = this;
     return context;
   }
 
-  function parse(str,reader,context){
-
+export const parse = (str, reader, context) => {
     str = str.replace(/\r/g,'\n').replace(/\\\n/g,' ').split("\n").map(x=>x.split(';')[0]).join('\n');
     str = str.replace(/\t/g,' ');
     str = str.replace(/\\"/g,'”');
@@ -413,11 +412,12 @@ var AVRLASS = new function(){let that = this;
       device.ram_start = context.SRAM_START;
     }
     return lst;
-  }
+};
 
-  let sum = {};
+let sum = {};
+export const summary = sum;
 
-  function compile(ins,context){
+export const compile = (ins, context) => {
     function expand(q){
       if (q[0][0] == '$'){
         return [q];
@@ -531,9 +531,9 @@ var AVRLASS = new function(){let that = this;
     } 
 
     return out;
-  }
+};
 
-  function assemble(lst){
+export const assemble = (lst) => {
     let code = [];
     for (let i = 0; i < lst.length; i++){
       // console.log(lst[i])
@@ -556,8 +556,9 @@ var AVRLASS = new function(){let that = this;
       }
     }
     return code;
-  }
-  function to_ihex(code){
+};
+
+export const to_ihex = (code) => {
     function hex(x,n){
       return x.toString(16).toUpperCase().padStart(n,'0');
     }
@@ -576,9 +577,9 @@ var AVRLASS = new function(){let that = this;
     }
     oo.push(':00000001FF\n')
     return oo.join('\n');
-  }
+};
 
-  function print_summary(){
+export const print_summary = () => {
     function nf(n){
       if (n < 0){
         return '?'.padStart(6,' ');
@@ -598,17 +599,9 @@ var AVRLASS = new function(){let that = this;
       o += "|"+nf(p).slice(1)+"% ";
     }
     return o;
-  }
+};
 
-  that.new_context = new_context;
-  that.device = device;
-  that.parse = parse;
-  that.compile = compile;
-  that.assemble = assemble;
-  that.to_ihex = to_ihex;
-  that.summary = sum;
-  that.print_summary = print_summary;
-  that.asm_to_hex = function(str, reader){
+export const asm_to_hex = (str, reader) => {
     let context = new_context({});
     let lst = parse(str,reader,context);
     let ins = compile(lst,context);
@@ -616,9 +609,4 @@ var AVRLASS = new function(){let that = this;
     let code = assemble(ins);
     let hex = to_ihex(code);
     return hex;
-  }
-}
-
-if (typeof module != "undefined"){
-  module.exports = AVRLASS;
-}
+};
