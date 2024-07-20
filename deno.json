@@ -1,0 +1,14 @@
+{
+    "imports": {
+        "assert": "https://deno.land/std@0.224.0/assert/mod.ts"
+    },
+    "compilerOptions": {
+        "noUncheckedIndexedAccess": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "strict": true
+    },
+    "exclude": [
+        "_deno"
+    ]
+}

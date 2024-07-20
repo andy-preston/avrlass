@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# cSpell:words deno avrlass biomejs
+
+export DENO_DIR="$(pwd)/_deno"
+mkdir -p "${DENO_DIR}"
+
+TASK="${1:-run}"
+case $TASK in
+run)
+    deno run -A avrlass.cli.js
+    ;;
+check)
+    deno test --allow-read
+    deno check -q $(find -name \*.ts | grep -v -e ./_deno/)
+    deno lint
+    deno run -A npm:@biomejs/biome check
+    ;;
+*)
+    echo "./local-build [check|run]"
+    exit 1
+    ;;
+esac
