@@ -470,7 +470,7 @@ export const compile = (ins, context) => {
           throw '.BYTE not allowed in .CSEG';
         }
         pc[seg] += lst[i][1];
-        sum[seg].data += lst[i][1];
+        summary[seg].data += lst[i][1];
       }else if (lst[i][0] == '$DB'){
         if (seg == 'C'){
           let bs = lst[i][1];
@@ -482,10 +482,10 @@ export const compile = (ins, context) => {
           bs = new Uint16Array(bs);
           out.push([pc[seg],'.DW',bs]);
           pc[seg] += bs.length;
-          sum[seg].data += bs.byteLength;
+          summary[seg].data += bs.byteLength;
         }else{
           pc[seg] += lst[i][1].byteLength;
-          sum[seg].data += lst[i][1].byteLength;
+          summary[seg].data += lst[i][1].byteLength;
         }
       }else if (lst[i][0] == '$ORG'){
         pc[seg] = lst[i][1];
@@ -494,7 +494,7 @@ export const compile = (ins, context) => {
           out.push([pc[seg],...lst[i]]);
           const n = op_len(lst[i][0]);
           pc[seg] += n/2;
-          sum[seg].code += n;
+          summary[seg].code += n;
         }else{
           throw 'code in '+seg+'SEG';
         }
@@ -588,14 +588,14 @@ export const print_summary = () => {
     }
     let o = "";
     o += "__SEGM_|__CODE_|__DATA_|__USED_|__SIZE_|__USE%_";
-    for (const k in sum){
+    for (const k in summary){
       o += "\n ."+k+"SEG ";
-      const s = sum[k].code+sum[k].data;
-      const p = Math.round(s/sum[k].max*1000)/10;
-      o += "|"+nf(sum[k].code)+" ";
-      o += "|"+nf(sum[k].data)+" ";
+      const s = summary[k].code+summary[k].data;
+      const p = Math.round(s/summary[k].max*1000)/10;
+      o += "|"+nf(summary[k].code)+" ";
+      o += "|"+nf(summary[k].data)+" ";
       o += "|"+nf(s)+" ";
-      o += "|"+nf(sum[k].max)+" ";
+      o += "|"+nf(summary[k].max)+" ";
       o += "|"+nf(p).slice(1)+"% ";
     }
     return o;
