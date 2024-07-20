@@ -1,12 +1,12 @@
 export const from_ihex = (str) => {
-    let lines = str.replace(/\r/g, '\n').split('\n').map(x=>x.trim()).filter(x=>x&&x.length).map(x=>x.split(':')[1]);
+    const lines = str.replace(/\r/g, '\n').split('\n').map(x=>x.trim()).filter(x=>x&&x.length).map(x=>x.split(':')[1]);
     let bytes = [];
     let baddr = 0;
     for (let i = 0; i < lines.length; i++){
-      let ln = lines[i];
-      let typ = parseInt(ln.slice(6,8),16);
-      let num = parseInt(ln.slice(0,2),16);
-      let dat = [];
+      const ln = lines[i];
+      const typ = parseInt(ln.slice(6,8),16);
+      const _num = parseInt(ln.slice(0,2),16);
+      const dat = [];
       for (let j = 8; j < ln.length-2; j+=2){
         dat.push(parseInt(ln.slice(j,j+2),16));
       }
@@ -28,12 +28,12 @@ export const from_ihex = (str) => {
       tmpl = tmpl.slice(16).concat(tmpl.slice(0,16))
       pcd ++;
     }
-    let args = {};
-    let argl = {};
+    const args = {};
+    const argl = {};
     for (let i = 0; i < tmpl.length; i++){
-      let p = ~~(i/8);
-      let q = i & 7;
-      let b = (bytes[p]>>q)&1;
+      const p = ~~(i/8);
+      const q = i & 7;
+      const b = (bytes[p]>>q)&1;
       if (tmpl[i] == '0'){
         if (b) return false;
       }else if (tmpl[i] == '1'){
@@ -48,9 +48,9 @@ export const from_ihex = (str) => {
       }
     }
 
-    let oo = fun(args);
+    const oo = fun(args);
     if (op.includes(".")){
-      let [a,b] = op.split(".");
+      const [a,b] = op.split(".");
       if (b != "RC"){
         op = a;
         if (op.startsWith("STD")){
@@ -78,7 +78,7 @@ export const from_ihex = (str) => {
     function L(x){
       return '0X'+x.toString(16).padStart(4,'0').toUpperCase();
     }
-    let com2 = (x,n)=>(x>=n?(-(n*2-1-x)):(x+1))
+    const com2 = (x,n)=>(x>=n?(-(n*2-1-x)):(x+1))
     return op_match(bytes,'ADC'    ,'0001_11rd_dddd_rrrr',({d,r})=>[R(d),R(r)])
          ||op_match(bytes,'ADD'    ,'0000_11rd_dddd_rrrr',({d,r})=>[R(d),R(r)])
          ||op_match(bytes,'ADIW'   ,'1001_0110_KKdd_KKKK',({d,K})=>[R(d*2+24),K])
@@ -186,11 +186,11 @@ export const from_ihex = (str) => {
 
 export const disass = (bytes) => {
     let pc = 0;
-    let ret = [];
+    const ret = [];
     while (bytes.length){
-      let o = disass_step(pc,bytes);
+      const o = disass_step(pc,bytes);
       if (o){
-        let [pcd,op,oo] = o;
+        const [pcd,op,oo] = o;
         ret.push(label_addr(pc)+":\t"+op+"\t"+oo.join(",\t"));
         for (let i = 0; i < pcd; i++){
           bytes.shift();

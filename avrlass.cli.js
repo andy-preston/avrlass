@@ -38,7 +38,7 @@ for (let i = 0; i < Deno.args.length; i++){
 let src = "";
 let inp_pth = null;
 let out_pth = 'stdout';
-let inc_pths = ['./'];
+const inc_paths = ['./'];
 let is_dis = false;
 
 for (let i = 1; i < Deno.args.length; i++){
@@ -52,24 +52,25 @@ for (let i = 1; i < Deno.args.length; i++){
     out_pth = Deno.args[i+1];
     i++;
   }else if (Deno.args[i] == '-I'){
-    inc_pths.push(Deno.args[i+1]);
+    inc_paths.push(Deno.args[i+1]);
     i++;
   }else if (Deno.args[i] == '-d'){
     is_dis = true;
   }else if (Deno.args[i] == '-h' || Deno.args[i] == '--help'){
     print_help();
   }else if (Deno.args[i][0] == '-'){
-    console.error('[error] unknow option: '+Deno.args[i]);
+    console.error('[error] unknown option: '+Deno.args[i]);
     Deno.exit(1);
   }else{
     inp_pth = Deno.args[i];
   }
 }
 function reader(pth){
-  for (let i = 0; i < inc_pths.length; i++){
+  for (let i = 0; i < inc_paths.length; i++){
     try{
-      return Deno.readFileSync(inc_pths[i]+'/'+pth).toString();
-    }catch(e){
+      return Deno.readFileSync(inc_paths[i]+'/'+pth).toString();
+    }catch(_e){
+        // ignore
     }
   }
   console.error('[error] cannot find file: '+pth);
@@ -87,20 +88,20 @@ try{
   let hex = "";
 
   if (!is_dis){
-    let context = new_context({});
+    const context = new_context({});
 
-    let lst = parse(src,reader,context);
+    const lst = parse(src,reader,context);
 
-    let ins = compile(lst,context);
+    const ins = compile(lst,context);
 
     console.log(print_summary());
 
     if (out_pth.endsWith('.json')){
-      Deno.writeFileSync(out_pth,'[\n'+ins.map(x=>JSON.stringify(x,(k,v)=>(v[2] instanceof Uint16Array)?[v[0],v[1],Array.from(v[2])]:v)).join(',\n')+'\n]\n');
+      Deno.writeFileSync(out_pth,'[\n'+ins.map(x=>JSON.stringify(x,(_k,v)=>(v[2] instanceof Uint16Array)?[v[0],v[1],Array.from(v[2])]:v)).join(',\n')+'\n]\n');
       Deno.exit(0);
     }
 
-    let code = assemble(ins);
+    const code = assemble(ins);
 
     if (out_pth.endsWith('.bin')){
       Deno.writeFileSync(out_pth,Buffer.from(code));

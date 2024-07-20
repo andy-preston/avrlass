@@ -5,7 +5,7 @@ export const device = {
     ram_start:0x60,
 };
 
-  let keywords = [
+const keywords = [
     '.EQU','.INCLUDE','.CSEG','.DSEG','.ESEG','.BYTE','.DB','.DW','.DD','.DQ','.ORG','.MACRO','.ENDM','.ENDMACRO','.MESSAGE','.ERROR','.WARNING','.DEVICE','.EXIT','.IF','.ENDIF','.ELSE','.ELIF','.IFDEF','.IFNDEF',
     'ADC','ADD','ADIW','AND','ANDI','ASR',
     'BCLR','BLD','BRBC','BRBS','BRCC','BRCS','BREAK','BREQ','BRGE','BRHC','BRHS','BRID','BRIE','BRLO','BRLT','BRMI','BRNE','BRPL','BRSH','BRTC','BRTS','BRVC','BRVS','BSET','BST',
@@ -19,8 +19,9 @@ export const device = {
     'POP','PUSH','RCALL','RET','RETI','RJMP','ROL','ROR',
     'SBC','SBCI','SBI','SBIC','SBIS','SBIW','SBR','SBRC','SBRS','SEC','SEH','SEI','SEN','SER','SES','SET','SEV','SEZ','SLEEP','SPM','ST','STD','STS','SUB','SUBI','SWAP',
     'TST','WDR','XCH',
-  ];
-  let missing = {
+];
+
+const missing = {
     'ADIW'   :'c',
     'BREAK'  :'r',
     'DES'    :'rc',
@@ -47,9 +48,10 @@ export const device = {
     'MULSU'  :'rec',
     'SBIW'   :'c',
     'SPM'    :'rc',
-    'SPM.Z+' :'re+c',
-    'SPM.Z+' :'re+xc',
-  }
+    //'SPM.Z+' :'re+c',
+    'SPM.Z+' :'re+xc'
+};
+
   function op_len(op){
     return {
       'JMP':4,
@@ -61,10 +63,10 @@ export const device = {
 
   function op_encode(pc,op,oo){
     function op_tmpl(tmpl_in,keys){
-      let tmpl = tmpl_in.split('').reverse();
-      for (let k in keys){
+      const tmpl = tmpl_in.split('').reverse();
+      for (const k in keys){
         // console.log(k,keys[k])
-        let bin = keys[k].toString(2).split('').reverse().concat(new Array(32).fill(0));
+        const bin = keys[k].toString(2).split('').reverse().concat(new Array(32).fill(0));
         for (let j = 0; j < tmpl.length; j++){
           if (tmpl[j] == k){
             tmpl[j] = bin.shift();
@@ -74,7 +76,7 @@ export const device = {
           throw `(${pc}) ${op} operand out of range: ${k}=${keys[k]} in ${tmpl_in}`;
         }
       }
-      let n = eval('0b'+tmpl.reverse().join(''));
+      const n = eval('0b'+tmpl.reverse().join(''));
       if (n > 65535){
         return [ (n>>16)&0xff, (n>>24)&0xff, n&0xff, (n>>8)&0xff];
       }else{
@@ -82,11 +84,11 @@ export const device = {
       } 
     }
 
-    let o0 = oo[0];
-    let o1 = oo[1];
+    const o0 = oo[0];
+    const o1 = oo[1];
 
-    let com2 = (x,n)=>(x+(n*2)*(x<0))
-    let rdist = (k,n)=>{
+    const com2 = (x,n)=>(x+(n*2)*(x<0))
+    const rdist = (k,n)=>{
       // console.log(k,pc,n)
       k--;
       if (device.flash_bytes <= 0 || k-pc >= -n || k-pc < n){
@@ -245,7 +247,6 @@ export const device = {
       case 'XCH.Z'  :return op_tmpl('1001_001r_rrrr_0100',{r:o0});
     }
     throw 'unknown instruction '+op;
-    return ['??','??']
   }
 
 const eval_scoped = (js, context) => {
@@ -266,7 +267,7 @@ export const new_context = (context) => {
     context.Y = 28;
     context.Z = 30;
     context.__arr__ = function(x){
-      let o = [];
+      const o = [];
       // console.log(x);
       for (let i = 0; i < x.length; i++){
         if (typeof x[i] == 'number'){
@@ -287,8 +288,8 @@ export const parse = (str, reader, context) => {
     str = str.replace(/\t/g,' ');
     str = str.replace(/\\"/g,'”');
     str = str.replace(/#pragma.*\n/g,"\n");
-    
-    let quq = str.split('"');
+
+    const quq = str.split('"');
     for (let i = 0; i < quq.length; i++){
       quq[i] = quq[i].replace(/”/g,'"');
       if (i&1) continue;
@@ -306,27 +307,27 @@ export const parse = (str, reader, context) => {
     }
     str = quq.join('"');
 
-    let lines = str.split('\n').map(x=>x.trim()).filter(x=>x.length);
-    let lst = {
+    const lines = str.split('\n').map(x=>x.trim()).filter(x=>x.length);
+    const lst = {
       __main__:[],
     };
     let cur = '__main__';
-    let if_states = [];
+    const if_states = [];
     for (let i = 0; i < lines.length; i++){
       if (lines[i].startsWith('.EXIT')) break;
 
       if (lines[i].startsWith('.IFDEF')){
-        let tf = context[lines[i].slice(6).trim()] !== undefined;
+        const tf = context[lines[i].slice(6).trim()] !== undefined;
         if_states.unshift(tf);
       }else if (lines[i].startsWith('.IFNDEF')){
-        let tf = context[lines[i].slice(7).trim()] == undefined;
+        const tf = context[lines[i].slice(7).trim()] == undefined;
         if_states.unshift(tf);
       }else if (lines[i].startsWith('.IF')){
-        let tf = !!eval_scoped(lines[i].slice(3),context);
+        const tf = !!eval_scoped(lines[i].slice(3),context);
         if_states.unshift(tf);
       }else if (lines[i].startsWith('.ELIF')){
         if (!if_states[0]){
-          let tf = !!eval_scoped(lines[i].slice(5),context);
+          const tf = !!eval_scoped(lines[i].slice(5),context);
           if_states[0] = tf;
         }else{
           if_states[0] = null;
@@ -344,9 +345,9 @@ export const parse = (str, reader, context) => {
       if (lines[i].endsWith(":")){
         lst[cur].push(['$LABEL',lines[i].slice(0,-1)]);
       }else if (lines[i].startsWith(".INCLUDE")){
-        let inc = reader(lines[i].slice(8).trim().slice(1,-1));
-        let mst = parse(inc,reader,context);
-        for (let k in mst){
+        const inc = reader(lines[i].slice(8).trim().slice(1,-1));
+        const mst = parse(inc,reader,context);
+        for (const k in mst){
           if (k == '__main__'){
             lst[k] = lst[k].concat(mst[k]);
           }else{
@@ -354,35 +355,35 @@ export const parse = (str, reader, context) => {
           }
         }
       }else if (lines[i].startsWith(".EQU") || lines[i].startsWith(".DEF") || lines[i].startsWith(".SET") ){
-        let [a,b] = lines[i].slice(4).split('=').map(x=>x.trim());
+        const [a,b] = lines[i].slice(4).split('=').map(x=>x.trim());
         context[a] = eval_scoped(b,context);
       }else if (lines[i].startsWith(".UNDEF")){
-        let a = lines[i].slice(6).trim();
+        const a = lines[i].slice(6).trim();
         delete context[a];
       }else if (lines[i].startsWith("#DEFINE")){
-        let ss = lines[i].slice(8).split(" ");
+        const ss = lines[i].slice(8).split(" ");
         while (!ss[0].trim().length) ss.shift();
-        let a = ss.shift();
-        let b = ss.join(' ');
+        const a = ss.shift();
+        const b = ss.join(' ');
         context[a] = eval_scoped(b,context);
       }else if (lines[i].startsWith('#')){
         continue;
       }else if (lines[i].startsWith(".CSEG") || lines[i].startsWith(".DSEG") || lines[i].startsWith(".ESEG")){
         lst[cur].push(['$SEG',lines[i][1]]);
       }else if (lines[i].startsWith(".BYTE")){
-        let o = eval_scoped(lines[i].slice(5),context);
+        const o = eval_scoped(lines[i].slice(5),context);
         lst[cur].push(['$BYTE',o]);
       }else if (lines[i].startsWith(".DB")){
-        let o = eval_scoped('new Uint8Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
+        const o = eval_scoped('new Uint8Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
         lst[cur].push(['$DB',o]);
       }else if (lines[i].startsWith(".DW")){
-        let o = eval_scoped('new Uint16Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
+        const o = eval_scoped('new Uint16Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
         lst[cur].push(['$DB',o]);
       }else if (lines[i].startsWith(".DD")){
-        let o = eval_scoped('new Uint32Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
+        const o = eval_scoped('new Uint32Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
         lst[cur].push(['$DB',o]);
       }else if (lines[i].startsWith(".DQ")){
-        let o = eval_scoped('new BigUint64Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
+        const o = eval_scoped('new BigUint64Array(__arr__(['+lines[i].slice(3)+'])).buffer',context);
         lst[cur].push(['$DB',o]);
       }else if (lines[i].startsWith(".ORG")){
         lst[cur].push(['$ORG',eval_scoped(lines[i].slice(4),context)]);
@@ -398,8 +399,8 @@ export const parse = (str, reader, context) => {
       }else if (lines[i].startsWith('.')){
         continue;
       }else{
-        let op = lines[i].split(' ')[0];
-        let operands = lines[i].slice(op.length).split(',').map(x=>x.trim()).filter(x=>x.length);
+        const op = lines[i].split(' ')[0];
+        const operands = lines[i].slice(op.length).split(',').map(x=>x.trim()).filter(x=>x.length);
         lst[cur].push([op,operands]);
       }
     }
@@ -414,23 +415,22 @@ export const parse = (str, reader, context) => {
     return lst;
 };
 
-let sum = {};
-export const summary = sum;
+export const summary = {};
 
 export const compile = (ins, context) => {
     function expand(q){
       if (q[0][0] == '$'){
         return [q];
       }
-      let [op,operands] = q;
-      let out = [];
+      const [op,operands] = q;
+      const out = [];
       if (ins[op]){
         for (let j = 0; j < ins[op].length; j++){
           if (ins[op][j][0][0] == '$'){
             out.push(ins[op][j]);
             continue;
           }
-          let [x,xx] = ins[op][j];
+          const [x,xx] = ins[op][j];
           for (let k = 0; k < xx.length; k++){
             for (let l = 0; l < 10; l++){
               xx[k] = xx[k].replaceAll('@'+l,operands[l]);
@@ -444,19 +444,19 @@ export const compile = (ins, context) => {
       return out;
     }
 
-    sum.C = {max:device.flash_bytes||context.PROGMEM_SIZE||-1,data:0,code:0};
-    sum.D = {max:context.SRAM_SIZE||-1,data:0,code:0};
-    sum.E = {max:context.EEPROM_SIZE||-1,data:0,code:0};
+    summary.C = {max:device.flash_bytes||context.PROGMEM_SIZE||-1,data:0,code:0};
+    summary.D = {max:context.SRAM_SIZE||-1,data:0,code:0};
+    summary.E = {max:context.EEPROM_SIZE||-1,data:0,code:0};
 
-    let lst = [];
+    const lst = [];
     for (let i = 0; i < ins.__main__.length; i++){
       expand(ins.__main__[i]).forEach(x=>lst.push(x))
     }
     // console.log(lst);
 
-    let pc = {C:0,D:device.ram_start,E:0};
+    const pc = {C:0,D:device.ram_start,E:0};
     let seg = 'C';
-    let out = [];
+    const out = [];
     for (let i = 0; i < lst.length; i++){
       if (lst[i][0] == '$SEG'){
         seg = lst[i][1];
@@ -492,7 +492,7 @@ export const compile = (ins, context) => {
       }else{
         if (seg == 'C'){
           out.push([pc[seg],...lst[i]]);
-          let n = op_len(lst[i][0]);
+          const n = op_len(lst[i][0]);
           pc[seg] += n/2;
           sum[seg].code += n;
         }else{
@@ -501,7 +501,7 @@ export const compile = (ins, context) => {
       }
     }
 
-    let special = new Set([
+    const special = new Set([
       'X','Y','Z','X+','Y+','Z+','-X','-Y','-Z'
     ]);
     for (let i = 0; i < out.length; i++){
@@ -534,10 +534,10 @@ export const compile = (ins, context) => {
 };
 
 export const assemble = (lst) => {
-    let code = [];
+    const code = [];
     for (let i = 0; i < lst.length; i++){
       // console.log(lst[i])
-      let [pc,op,operands] = lst[i];
+      const [pc,op,operands] = lst[i];
       while (code.length < pc*2){
         code.push(0);
       }
@@ -545,13 +545,13 @@ export const assemble = (lst) => {
         throw "address overlap in cseg: "+pc;
       }
       if (op == '.DW'){
-        let bs = Array.from(new Uint8Array(operands.buffer));
+        const bs = Array.from(new Uint8Array(operands.buffer));
         bs.forEach(x=>code.push(x));
       }else{
         if (missing[op] && missing[op].includes(device.instr_set.slice(-1).toLowerCase())){
           throw "instruction set "+device.instr_set+" does not support "+op;
         }
-        let z = op_encode(pc,op,operands);
+        const z = op_encode(pc,op,operands);
         code.push(...z);
       }
     }
@@ -562,9 +562,9 @@ export const to_ihex = (code) => {
     function hex(x,n){
       return x.toString(16).toUpperCase().padStart(n,'0');
     }
-    let oo = [':020000020000FC'];
+    const oo = [':020000020000FC'];
     for (let i = 0; i < code.length; i+=16){
-      let page = code.slice(i,i+16);
+      const page = code.slice(i,i+16);
       let o = `:${hex(page.length,2)}${hex(i,4)}00`;
       let s = page.length+((i>>8)&0xff)+(i&0xff);
       for (let j = 0; j < page.length; j++){
@@ -588,10 +588,10 @@ export const print_summary = () => {
     }
     let o = "";
     o += "__SEGM_|__CODE_|__DATA_|__USED_|__SIZE_|__USE%_";
-    for (let k in sum){
+    for (const k in sum){
       o += "\n ."+k+"SEG ";
-      let s = sum[k].code+sum[k].data;
-      let p = Math.round(s/sum[k].max*1000)/10;
+      const s = sum[k].code+sum[k].data;
+      const p = Math.round(s/sum[k].max*1000)/10;
       o += "|"+nf(sum[k].code)+" ";
       o += "|"+nf(sum[k].data)+" ";
       o += "|"+nf(s)+" ";
@@ -602,11 +602,11 @@ export const print_summary = () => {
 };
 
 export const asm_to_hex = (str, reader) => {
-    let context = new_context({});
-    let lst = parse(str,reader,context);
-    let ins = compile(lst,context);
+    const context = new_context({});
+    const lst = parse(str,reader,context);
+    const ins = compile(lst,context);
     console.log(print_summary());
-    let code = assemble(ins);
-    let hex = to_ihex(code);
+    const code = assemble(ins);
+    const hex = to_ihex(code);
     return hex;
 };
