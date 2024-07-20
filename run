@@ -17,7 +17,7 @@ check)
     deno run -A npm:@biomejs/biome check
     ;;
 *)
-    echo "./local-build [check|run]"
+    echo "./run [check|run]"
     exit 1
     ;;
 esac
