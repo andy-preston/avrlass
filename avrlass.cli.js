@@ -17,7 +17,7 @@ usage:
 options:
   -D <macro>=<value> Define macro
   -I <dir>           Add directory to search path
-  -o <file>          Write output to file, extensions: .hex/.bin/.json
+  -o <file>          Write output to file, extensions: .hex/.bin
   -t <arg>           Instruction Set: AVR/AVRe/AVRe+/AVRrc/AVRxm/AVRxt
   -d                 Disassemble instead of assemble
   -h                 Print this message
@@ -95,11 +95,6 @@ try{
     const ins = compile(lst,context);
 
     console.log(print_summary());
-
-    if (out_pth.endsWith('.json')){
-      Deno.writeFileSync(out_pth,'[\n'+ins.map(x=>JSON.stringify(x,(_k,v)=>(v[2] instanceof Uint16Array)?[v[0],v[1],Array.from(v[2])]:v)).join(',\n')+'\n]\n');
-      Deno.exit(0);
-    }
 
     const code = assemble(ins);
 

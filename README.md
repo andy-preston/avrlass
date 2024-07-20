@@ -32,7 +32,7 @@ usage:
 options:
   -D <macro>=<value> Define macro
   -I <dir>           Add directory to search path
-  -o <file>          Write output to file, extensions: .hex/.bin/.json
+  -o <file>          Write output to file, extensions: .hex/.bin
   -t <arg>           Instruction Set: AVR/AVRe/AVRe+/AVRrc/AVRxm/AVRxt
   -d                 Disassemble instead of assemble
   -h                 Print this message
