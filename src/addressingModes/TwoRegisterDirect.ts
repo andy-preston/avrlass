@@ -2,33 +2,43 @@ import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
 import { checkRegisterOperand } from "../instructions/operands.ts";
 
-const prefixes: Record<string, string> = {
-    "ADC":  "0001_11",
-    "ADD":  "0000_11",
-    "AND":  "0010_00",
-    "CP":   "0001_01",
-    "CPC":  "0000_01",
-    "CPSE": "0001_00",
-    "EOR":  "0010_01",
-    "MOV":  "0010_11",
-    "MUL":  "1001_11",
-    "OR":   "0010_10",
-    "SBC":  "0000_10",
-    "SUB":  "0001_10"
+const prefixesAndOperands: Record<string, [string, number]> = {
+    "CPC":  ["0000_01", 2],
+    "SBC":  ["0000_10", 2],
+    "ADD":  ["0000_11", 2], // LSL and
+    "LSL":  ["0000_11", 1], // ADD are almost the same
+    "CPSE": ["0001_00", 2],
+    "CP":   ["0001_01", 2],
+    "SUB":  ["0001_10", 2],
+    "ADC":  ["0001_11", 2], // ROL and
+    "ROL":  ["0001_11", 1], // ADD are almost the same
+    "AND":  ["0010_00", 2], // TST and
+    "TST":  ["0010_00", 1], // AND are almost the same
+    "EOR":  ["0010_01", 2], // CLR and
+    "CLR":  ["0010_01", 1], // EOR are almost the same
+    "OR":   ["0010_10", 2],
+    "MOV":  ["0010_11", 2],
+    "MUL":  ["1001_11", 2]
 };
 
 export const encode = (instruction: Instruction): GeneratedCode | null => {
-    if (!(instruction.mnemonic in prefixes)) {
+    if (!(instruction.mnemonic in prefixesAndOperands)) {
         return null;
     }
-    if (instruction.operands.length != 2) {
-        throw new Error('Incorrect operands - expecting 2 registers');
+    const [prefix, operandCount] = prefixesAndOperands[instruction.mnemonic]!;
+    if (instruction.operands.length != operandCount) {
+        throw new Error(
+            `Incorrect operands - expecting ${operandCount} registers`
+        );
     }
-    checkRegisterOperand(instruction.operands[0]!);
-    checkRegisterOperand(instruction.operands[1]!);
-    const prefix = prefixes[instruction.mnemonic];
+    const registers = instruction.operands;
+    if (operandCount == 1) {
+        registers[1] = registers[0]!;
+    }
+    checkRegisterOperand(registers[0]!);
+    checkRegisterOperand(registers[1]!);
     return template(`${prefix}rd_dddd_rrrr`, {
-        "d": instruction.operands[0],
-        "r": instruction.operands[1]
+        "d": registers[0],
+        "r": registers[1]
     });
 };

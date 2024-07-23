@@ -3,26 +3,42 @@ import { Instruction } from "../instructions/instruction.ts";
 import { checkByteOperand, checkImmediateRegisterOperand } from "../instructions/operands.ts";
 
 const prefixes: Record<string, string> = {
-    "ANDI": "0111",
     "CPI":  "0011",
-    "LDI":  "1110",
-    "ORI":  "0110",
     "SBCI": "0100",
     "SUBI": "0101",
+    "ORI":  "0110", // SBR and
+    "SBR":  "0110", // ORI are the same instruction
+    "ANDI": "0111", // CBR and
+    "CBR":  "0111", // ANDI are ALMOST the same instruction
+    "LDI":  "1110", // SER and
+    "SER":  "1110"  // LDI are ALMOST the same instruction
 };
+
+const immediate = (mnemonic: string, operand1: number) => {
+    switch (mnemonic) {
+        case "CBR": return 0xff - operand1;
+        case "SER": return 0xff;
+        default: return operand1;
+    }
+}
 
 export const encode = (instruction: Instruction): GeneratedCode | null => {
     if (!(instruction.mnemonic in prefixes)) {
         return null;
     }
-    if (instruction.operands.length != 2) {
+    if (instruction.mnemonic == "SER") {
+        if (instruction.operands.length != 1) {
+            throw new Error("Incorrect operands - expecting a register R16 - R31");
+        }
+    } else if (instruction.operands.length != 2) {
         throw new Error('Incorrect operands - expecting a register R16 - R31 and a byte');
     }
     checkImmediateRegisterOperand(instruction.operands[0]!);
     checkByteOperand(instruction.operands[1]!);
     const prefix = prefixes[instruction.mnemonic]!;
     return template(`${prefix}_KKKK_dddd_KKKK`, {
+        // Immediate instructions only operate on R16 - R31
         "d": instruction.operands[0]! - 16,
-        "K": instruction.operands[1]
+        "K": immediate(instruction.mnemonic, instruction.operands[1]!)
     });
 };

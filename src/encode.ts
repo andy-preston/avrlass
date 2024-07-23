@@ -93,18 +93,6 @@ export const encode = (
                 "d": operands[1]
             });
 
-
-
-        case "LDD.Y":
-            return template("10q0_qq0d_dddd_1qqq", {
-                "d": operands[0],
-                "q": operands[1]
-            });
-        case "LDD.Z":
-            return template("10q0_qq0d_dddd_0qqq", {
-                "d": operands[0],
-                "q": operands[1]
-            });
         case "LDS.RC":
             return template("1010_0kkk_dddd_kkkk", {
                 "d": operands[0]! - 16,
@@ -167,16 +155,6 @@ export const encode = (
             return template("1111_111r_rrrr_0bbb", {
                 "r": operands[0],
                 "b":operands[1]
-            });
-        case "STD.Y":
-            return template("10q0_qq1r_rrrr_1qqq", {
-                "q": operands[0],
-                "r": operands[1]
-            });
-        case "STD.Z":
-            return template("10q0_qq1r_rrrr_0qqq", {
-                "q": operands[0],
-                "r": operands[1]
             });
         case "STS.RC":
             return template("1010_1kkk_dddd_kkkk", {
