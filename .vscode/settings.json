@@ -40,6 +40,7 @@
         "FMULSU",
         "ICALL",
         "IJMP",
+        "ksss",
         "MOVW",
         "MULS",
         "MULSU",
@@ -53,6 +54,7 @@
         "SBIW",
         "SBRC",
         "SBRS",
-        "SUBI"
+        "SUBI",
+        "Xbbb"
     ]
 }
