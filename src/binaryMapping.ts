@@ -33,6 +33,6 @@ export const relativeJump = (
     try {
         return twosComplement(target - 1 - programCounter, bits, true);
     } catch (error) {
-        throw new RangeError('relative jump out of range', { "cause": error});
+        throw new RangeError(`Relative jump ${error.message}`);
     }
 };

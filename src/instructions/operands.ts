@@ -14,6 +14,14 @@ export const checkImmediateRegisterOperand = (operand: number) => {
     }
 }
 
+export const checkBitIndexOperand = (operand: number) => {
+    if (operand < 0 || operand > 7) {
+        throw new Error(
+            `Invalid operand - expecting a bit index 0-7 not ${operand}`
+        );
+    }
+}
+
 export const checkByteOperand = (operand: number) => {
     if (operand < -128 || operand > 255) {
         throw new RangeError(

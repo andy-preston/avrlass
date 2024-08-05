@@ -11,7 +11,7 @@ const prefixesAndOperands: Record<string, [string, number]> = {
     "CP":   ["0001_01", 2],
     "SUB":  ["0001_10", 2],
     "ADC":  ["0001_11", 2], // ROL and
-    "ROL":  ["0001_11", 1], // ADD are almost the same
+    "ROL":  ["0001_11", 1], // ADC are almost the same
     "AND":  ["0010_00", 2], // TST and
     "TST":  ["0010_00", 1], // AND are almost the same
     "EOR":  ["0010_01", 2], // CLR and
