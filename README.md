@@ -7,11 +7,13 @@ In Loving Memory of
 [GAVRASM](https://web.archive.org/web/20230918215305/http://www.avr-asm-tutorial.net/)
 
 I miss being able to freely mix compile-time high-level code with my assembly
-language... If you've ever used "BBC Basic", you'll know what I'm on about.
+language... If you've ever used
+[BBC Basic](http://www.riscos.com/support/developers/armlang/chap04.htm),
+you'll know what I'm on about.
 
 I'm hoping that when this is done, you'll be able to freely mix JavaScript in
 with your assembly code and use it to calculate all sorts of stuff at
-`comptime`.
+[comptime](https://ziglang.org/documentation/master/#comptime).
 
 ## Work in Progress
 
