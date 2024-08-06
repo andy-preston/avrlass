@@ -35,7 +35,5 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     const operand = impliedOperand == undefined ?
         instruction.operands[0]! : impliedOperand;
     checkBitIndexOperand(operand);
-    return template(
-        `1001_0100_${operationBit}sss_1000`, { "s": operand }
-    );
+    return template(`1001_0100_${operationBit}sss_1000`, { "s": operand });
 };

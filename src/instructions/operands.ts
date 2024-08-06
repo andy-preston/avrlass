@@ -4,7 +4,7 @@ export const checkRegisterOperand = (operand: number) => {
             "Operand out of range - expecting a register: R0 - R31"
         );
     }
-}
+};
 
 export const checkImmediateRegisterOperand = (operand: number) => {
     if (operand < 16 || operand > 31) {
@@ -12,7 +12,15 @@ export const checkImmediateRegisterOperand = (operand: number) => {
             "Operand out of range - expecting a register: R16 - R31"
         );
     }
-}
+};
+
+export const checkPortOperand = (operand: number) => {
+    if (operand < 0 || operand > 63) {
+        throw new Error(
+            `Invalid operand - expecting a GPIO port 0-63 not ${operand}`
+        );
+    }
+};
 
 export const checkBitIndexOperand = (operand: number) => {
     if (operand < 0 || operand > 7) {
@@ -20,7 +28,7 @@ export const checkBitIndexOperand = (operand: number) => {
             `Invalid operand - expecting a bit index 0-7 not ${operand}`
         );
     }
-}
+};
 
 export const checkByteOperand = (operand: number) => {
     if (operand < -128 || operand > 255) {
@@ -28,4 +36,4 @@ export const checkByteOperand = (operand: number) => {
             "Operand out of range - expecting a byte: -128 - 127 or 0 - 255"
         );
     }
-}
+};

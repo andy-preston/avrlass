@@ -3,6 +3,7 @@
     "deno.enable": true,
     "deno.lint": true,
     "cSpell.words": [
+        "Abbb",
         "ADIW",
         "ANDI",
         "BCLR",

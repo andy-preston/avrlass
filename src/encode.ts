@@ -8,30 +8,7 @@ export const encode = (
 ): GeneratedCode => {
 
     switch (mnemonic) {
-        case "SBI":
-            return template("1001_1010_AAAA_Abbb", {
-                "A": operands[0],
-                "b": operands[1]
-            });
-        case "SBIC":
-            return template("1001_1001_AAAA_Abbb", {
-                "A": operands[0],
-                "b": operands[1]
-            });
-        case "SBIS":
-            return template("1001_1011_AAAA_Abbb", {
-                "A": operands[0],
-                "b": operands[1]
-            });
-        case "CBI":
-            return template("1001_1000_AAAA_Abbb", {
-                "A": operands[0],
-                "b":operands[1]
-            });
-
-
         case "RCALL":
-            // All jumps need to consider flash size!
             return template("1101_kkkk_kkkk_kkkk", {
                 "k": relativeJump(operands[0]!, 12, pc)
             });
@@ -39,6 +16,16 @@ export const encode = (
             return template("1100_kkkk_kkkk_kkkk", {
                 "k": relativeJump(operands[0]!, 12, pc)
             });
+
+        case "CALL":
+            return template("1001_010k_kkkk_111k_kkkk_kkkk_kkkk_kkkk", {
+                "k": operands[0]
+            });
+        case "JMP":
+            return template("1001_010k_kkkk_110k_kkkk_kkkk_kkkk_kkkk", {
+                "k":operands[0]
+            });
+
 
 
 
@@ -96,28 +83,6 @@ export const encode = (
 
 
 
-        case "IN":
-            return template("1011_0AAd_dddd_AAAA", {
-                "d": operands[0],
-                "A": operands[1]
-            });
-        case "OUT":
-            return template("1011_1AAr_rrrr_AAAA", {
-                "A": operands[0],
-                "r": operands[1]
-            });
-
-
-        case "CALL":
-            return template("1001_010k_kkkk_111k_kkkk_kkkk_kkkk_kkkk", {
-                "k": operands[0]
-            });
-        case "JMP":
-            return template("1001_010k_kkkk_110k_kkkk_kkkk_kkkk_kkkk", {
-                "k":operands[0]
-            });
-
-
         case "LDS":
             return template("1001_000d_dddd_0000_kkkk_kkkk_kkkk_kkkk", {
                 "d": operands[0],
@@ -142,4 +107,3 @@ export const encode = (
     }
     throw `unknown instruction ${mnemonic}`;
 }
-
