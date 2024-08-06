@@ -28,7 +28,7 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     checkRegisterOperand(instruction.operands[0]!);
     const [prefix, suffix] = prefixAndSuffixes[instruction.mnemonic]!;
     // In the official documentation, some of these have
-    // "XXXX XXXr rrrr XXXX" as their template rather than "d dddd".
+    // "#### ###r rrrr ####" as their template rather than "d dddd".
     // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
     return template(`${prefix}d_dddd_${suffix}`, {
         "d": instruction.operands[0]

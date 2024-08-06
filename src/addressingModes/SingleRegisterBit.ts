@@ -26,7 +26,7 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     checkBitIndexOperand(instruction.operands[1]!);
     const operationBits = mapping[instruction.mnemonic]!;
     // In the official documentation, some of these have
-    // "XXXX XXXr rrrr Xbbb" as their template rather than "d dddd".
+    // "#### ###r rrrr #bbb" as their template rather than "d dddd".
     // e.g. `BLD Rd, b` has "d dddd" but `SBRS Rd, b` has "r rrrr".
     return template(`1111_1${operationBits}d_dddd_0bbb`, {
         "d": instruction.operands[0]!,
