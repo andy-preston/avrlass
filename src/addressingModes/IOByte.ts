@@ -1,8 +1,8 @@
 import { Instruction } from "../instructions/instruction.ts";
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { check, checkCount } from "../instructions/operands.ts";
+import { check, checkCount, OperandIndex } from "../instructions/operands.ts";
 
-const mappings: Record<string, [string, number, number]> = {
+const mappings: Record<string, [string, OperandIndex, OperandIndex]> = {
     "IN":  ["0", 0, 1],
     "OUT": ["1", 1, 0]
 };
