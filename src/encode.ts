@@ -8,39 +8,6 @@ export const encode = (
 ): GeneratedCode => {
 
     switch (mnemonic) {
-        case "RCALL":
-            return template("1101_kkkk_kkkk_kkkk", {
-                "k": relativeJump(operands[0]!, 12, pc)
-            });
-        case "RJMP":
-            return template("1100_kkkk_kkkk_kkkk", {
-                "k": relativeJump(operands[0]!, 12, pc)
-            });
-
-        case "CALL":
-            return template("1001_010k_kkkk_111k_kkkk_kkkk_kkkk_kkkk", {
-                "k": operands[0]
-            });
-        case "JMP":
-            return template("1001_010k_kkkk_110k_kkkk_kkkk_kkkk_kkkk", {
-                "k":operands[0]
-            });
-
-
-
-
-        case "ADIW":
-            return template("1001_0110_KKdd_KKKK", {
-                "d": (operands[0]! - 24) / 2,
-                "K": operands[1]
-            });
-        case "SBIW":
-            return template("1001_0111_KKdd_KKKK", {
-                "d": (operands[0]! - 24) / 2,
-                "K": operands[1]
-            });
-
-
         case "FMUL":
             return template("0000_0011_0ddd_1rrr", {
                 "d": operands[0]! - 16,
@@ -72,13 +39,6 @@ export const encode = (
             return template("0000_0001_dddd_rrrr", {
                 "d": operands[0]! / 2,
                 "r": operands[1]! / 2
-            });
-
-
-
-        case "DES":
-            return template("1001_0100_KKKK_1011", {
-                "K": operands[0]
             });
 
 
