@@ -1,10 +1,11 @@
 import { relativeJump } from "./binaryMapping.ts";
+import { Operands } from "./instructions/operands.ts";
 
 
 export const encode = (
     pc: number,
     mnemonic: string,
-    operands: Array<number>
+    operands: Operands
 ): GeneratedCode => {
 
     switch (mnemonic) {
