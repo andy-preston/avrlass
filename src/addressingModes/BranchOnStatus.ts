@@ -2,7 +2,7 @@ import { relativeJump } from "../binaryMapping.ts";
 import { Instruction } from "../instructions/instruction.ts";
 import { GeneratedCode } from "../instructions/binaryTemplate.ts";
 import { template } from "../instructions/binaryTemplate.ts";
-import { checkBitIndexOperand } from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 const mappings: Record<string, [string, number?]> = {
     "BRBC": ["1", undefined],
@@ -32,15 +32,21 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
         return null;
     }
     const [operationBit, impliedOperand] = mappings[instruction.mnemonic]!;
-    const operandCount = impliedOperand == undefined ? 2 : 1;
-    if (instruction.operands.length != operandCount) {
-        throw new Error(`Incorrect operands - expecting ${operandCount}`);
-    }
+    checkCount(
+        instruction.operands,
+        impliedOperand == undefined ?
+            ["bitIndex", "relativeAddress"] : ["relativeAddress"]
+    );
     const bit = impliedOperand == undefined ?
         instruction.operands[0] : impliedOperand;
     const jumpAddress = impliedOperand == undefined ?
         instruction.operands[1] : instruction.operands[0];
-    checkBitIndexOperand(bit!);
+    check("bitIndex", "first", bit!);
+    check(
+        "relativeAddress",
+        impliedOperand == undefined ? "second": "first",
+        jumpAddress!
+    );
     return template(`1111_0${operationBit}kk_kkkk_ksss`, {
         "s": bit,
         "k": relativeJump(jumpAddress!, 7, pc)

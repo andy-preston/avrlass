@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { checkRegisterOperand } from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 const prefixesAndOperands: Record<string, [string, number]> = {
     "CPC":  ["0000_01", 2],
@@ -26,17 +26,16 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
         return null;
     }
     const [prefix, operandCount] = prefixesAndOperands[instruction.mnemonic]!;
-    if (instruction.operands.length != operandCount) {
-        throw new Error(
-            `Incorrect operands - expecting ${operandCount} registers`
-        );
-    }
+    checkCount(
+        instruction.operands,
+        operandCount == 1 ? ["register"] : ["register", "register"]
+    );
     const registers = instruction.operands;
     if (operandCount == 1) {
         registers[1] = registers[0]!;
     }
-    checkRegisterOperand(registers[0]!);
-    checkRegisterOperand(registers[1]!);
+    check("register", "first", registers[0]!);
+    check("register", "second", registers[1]!);
     return template(`${prefix}rd_dddd_rrrr`, {
         "d": registers[0],
         "r": registers[1]

@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { checkRegisterOperand } from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 const prefixAndSuffixes: Record<string, [string, string]> = {
     "POP":     ["1001_000", "1111"],
@@ -22,10 +22,8 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     if (!(instruction.mnemonic in prefixAndSuffixes)) {
         return null;
     }
-    if (instruction.operands.length != 1) {
-        throw new Error('Incorrect operands - expecting 1 register');
-    }
-    checkRegisterOperand(instruction.operands[0]!);
+    checkCount(instruction.operands, ["register"]);
+    check("register", "first", instruction.operands[0]!);
     const [prefix, suffix] = prefixAndSuffixes[instruction.mnemonic]!;
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".

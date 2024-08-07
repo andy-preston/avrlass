@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { checkByteOperand, checkImmediateRegisterOperand } from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 const prefixes: Record<string, string> = {
     "CPI":  "0011",
@@ -29,15 +29,15 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     if (!(instruction.mnemonic in prefixes)) {
         return null;
     }
-    if (instruction.mnemonic == "SER") {
-        if (instruction.operands.length != 1) {
-            throw new Error("Incorrect operands - expecting a register R16 - R31");
-        }
-    } else if (instruction.operands.length != 2) {
-        throw new Error('Incorrect operands - expecting a register R16 - R31 and a byte');
+    checkCount(
+        instruction.operands,
+        instruction.mnemonic != "SER" ?
+            ["immediateRegister", "byte"] : ["immediateRegister"]
+    );
+    check("immediateRegister", "first", instruction.operands[0]!);
+    if (instruction.mnemonic != "SER") {
+        check("byte", "second", instruction.operands[1]!);
     }
-    checkImmediateRegisterOperand(instruction.operands[0]!);
-    checkByteOperand(instruction.operands[1]!);
     const prefix = prefixes[instruction.mnemonic]!;
     return template(`${prefix}_KKKK_dddd_KKKK`, {
         // Immediate instructions only operate on R16 - R31

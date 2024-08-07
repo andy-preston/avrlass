@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { checkBitIndexOperand } from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 const mappings: Record<string, [string, number?]> = {
     "BCLR": ["1", undefined],
@@ -28,12 +28,12 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
         return null;
     }
     const [operationBit, impliedOperand] = mappings[instruction.mnemonic]!;
-    const operandCount = impliedOperand == undefined ? 1 : 0;
-    if (instruction.operands.length != operandCount) {
-        throw new Error(`Incorrect operands - expecting ${operandCount}`);
-    }
+    checkCount(
+        instruction.operands,
+        impliedOperand == undefined ? ["bitIndex"] : []
+    );
     const operand = impliedOperand == undefined ?
         instruction.operands[0]! : impliedOperand;
-    checkBitIndexOperand(operand);
+    check("bitIndex", "first", operand);
     return template(`1001_0100_${operationBit}sss_1000`, { "s": operand });
 };

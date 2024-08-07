@@ -1,10 +1,7 @@
 
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import {
-    checkRegisterOperand,
-    checkBitIndexOperand
-} from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 const mapping: Record<string, string> = {
     "BLD":  "00",
@@ -17,13 +14,9 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     if (!(instruction.mnemonic in mapping)) {
         return null;
     }
-    if (instruction.operands.length != 2) {
-        throw new Error(
-            'Incorrect operands - expecting 1 register and 1 bit index'
-        );
-    }
-    checkRegisterOperand(instruction.operands[0]!);
-    checkBitIndexOperand(instruction.operands[1]!);
+    checkCount(instruction.operands, ["register", "bitIndex"]);
+    check("register", "first", instruction.operands[0]!);
+    check("bitIndex", "second", instruction.operands[1]!);
     const operationBits = mapping[instruction.mnemonic]!;
     // In the official documentation, some of these have
     // "#### ###r rrrr #bbb" as their template rather than "d dddd".

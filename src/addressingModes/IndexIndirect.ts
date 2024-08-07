@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { checkRegisterOperand } from "../instructions/operands.ts";
+import { check, checkCount } from "../instructions/operands.ts";
 
 // These are only valid for `LD` and `ST`
 const bit4AndSuffixes: Record<string, [string, string]> = {
@@ -64,15 +64,8 @@ export const encode = (instruction: Instruction): GeneratedCode | null => {
     if (!(instruction.mnemonic in prefixAndMiddles)) {
         return null;
     }
-    if (instruction.operands.length != 2) {
-        throw new Error("Incorrect operands - expecting 1 register and 1 index operation");
-    }
-    const register = instruction.operands[0]!;
-    const indexOp = instruction.operands[1]!;
-    checkRegisterOperand(register);
-    if (!(indexOp in bit4AndSuffixes)) {
-        throw new Error("Incorrect index operation");
-    }
+    checkCount(instruction.operands, ["register", "indexOperation"]);
+    check("register", "first", instruction.operands[0]!);
     const [prefix, middle] = prefixAndMiddles[instruction.mnemonic]!;
     const [bit4, suffix] = bit4AndSuffixes[indexOp]!;
     // In the official documentation, the store operations have
