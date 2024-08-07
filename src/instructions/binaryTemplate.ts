@@ -7,7 +7,9 @@ interface AllTemplateOperands {
     "k": number;
     "K": number;
     // In some of the places we've used "d", the official documentation
-    // uses "r" but, for code simplicity, we're using "d" across the board.
+    // uses "r" but, for code simplicity, we're using "d" across the board
+    // EXCEPT where there's a two-register operation, then one is "d" and the
+    // other is "r".
     "r": number;
     "s": number;
     "q": number;
