@@ -11,11 +11,19 @@ const types = {
     ],
     "immediateRegister": [
         (operand: number) => operand >=16 && operand <= 31,
-        "register (R16 - R31)"
+        "immediate register (R16 - R31)"
+    ],
+    "multiplyRegister": [
+        (operand: number) => operand >=16 && operand <= 23,
+        "multiply register (R16 - R23)"
     ],
     "registerPair": [
         (operand: number) => [24, 26, 28, 30].includes(operand),
         "register pair (R24, R26, R28, R30)"
+    ],
+    "anyRegisterPair": [
+        (operand: number) => operand >= 0 && operand <= 30 && operand % 2 == 0,
+        "any register pair (R0 - R30 - even only)"
     ],
     "port": [
         (operand: number) => operand >= 0 && operand <= 0x3f,
@@ -45,10 +53,14 @@ const types = {
     "relativeAddress": [
         (operand: number) => operand >= 0 || operand <= 0x1000,
         "branch to 12 bit address (0 - 0x1000) (4 K)"
+    ],
+    "ramAddress": [
+        (operand: number) => operand >= 0 || operand <= 0xFFFFFFFF,
+        "16 bit RAM address (0 - 0xFFFFFFFF) (64 K)"
     ]
 } satisfies Record<string, Operand>;
 
-type TypeName = keyof typeof types;
+export type TypeName = keyof typeof types;
 
 const description = (typeName: TypeName): string => types[typeName][1];
 
