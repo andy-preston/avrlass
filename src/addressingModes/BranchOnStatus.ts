@@ -44,10 +44,10 @@ export const encode = (
         instruction.operands[0] : impliedOperand;
     const jumpAddress = impliedOperand == undefined ?
         instruction.operands[1] : instruction.operands[0];
-    check("bitIndex", "first", bit!);
+    check("bitIndex", 0, bit!);
     check(
         "relativeAddress",
-        impliedOperand == undefined ? "second": "first",
+        impliedOperand == undefined ? 1 : 0,
         jumpAddress!
     );
     return template(`1111_0${operationBit}kk_kkkk_ksss`, {

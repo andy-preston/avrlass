@@ -37,8 +37,8 @@ export const encode = (
     if (operandCount == 1) {
         registers[1] = registers[0]!;
     }
-    check("register", "first", registers[0]!);
-    check("register", "second", registers[1]!);
+    check("register", 0, registers[0]!);
+    check("register", 1, registers[1]!);
     return template(`${prefix}rd_dddd_rrrr`, {
         "d": registers[0],
         "r": registers[1]

@@ -19,8 +19,8 @@ export const encode = (
         instruction.operands,
         ["registerPair", "sixBits"]
     );
-    check("registerPair", "first", instruction.operands[0]!);
-    check("sixBits", "second", instruction.operands[1]!);
+    check("registerPair", 0, instruction.operands[0]!);
+    check("sixBits", 1, instruction.operands[1]!);
     const operationBit = mapping[instruction.mnemonic]!;
     return template(`1001_011${operationBit}_KKdd_KKKK`, {
         "d": (instruction.operands[0]! - 24) / 2,

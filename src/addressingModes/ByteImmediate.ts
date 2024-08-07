@@ -37,9 +37,9 @@ export const encode = (
         instruction.mnemonic != "SER" ?
             ["immediateRegister", "byte"] : ["immediateRegister"]
     );
-    check("immediateRegister", "first", instruction.operands[0]!);
+    check("immediateRegister", 0, instruction.operands[0]!);
     if (instruction.mnemonic != "SER") {
-        check("byte", "second", instruction.operands[1]!);
+        check("byte", 1, instruction.operands[1]!);
     }
     const prefix = prefixes[instruction.mnemonic]!;
     return template(`${prefix}_KKKK_dddd_KKKK`, {

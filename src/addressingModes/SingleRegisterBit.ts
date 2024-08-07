@@ -18,8 +18,8 @@ export const encode = (
         return null;
     }
     checkCount(instruction.operands, ["register", "bitIndex"]);
-    check("register", "first", instruction.operands[0]!);
-    check("bitIndex", "second", instruction.operands[1]!);
+    check("register", 0, instruction.operands[0]!);
+    check("bitIndex", 1, instruction.operands[1]!);
     const operationBits = mapping[instruction.mnemonic]!;
     // In the official documentation, some of these have
     // "#### ###r rrrr #bbb" as their template rather than "d dddd".

@@ -26,7 +26,7 @@ export const encode = (
         return null;
     }
     checkCount(instruction.operands, ["register"]);
-    check("register", "first", instruction.operands[0]!);
+    check("register", 0, instruction.operands[0]!);
     const [prefix, suffix] = prefixAndSuffixes[instruction.mnemonic]!;
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".

@@ -52,19 +52,23 @@ type TypeName = keyof typeof types;
 
 const description = (typeName: TypeName): string => types[typeName][1];
 
+export type OperandIndex = 0 | 1;
+
 export const check = (
     typeName: TypeName,
-    position: "first" | "second",
+    position: OperandIndex,
     value: number
 ) => {
     const theType = types[typeName];
-    if (!theType[0](value)) {
-        const displayValue = `${value} / 0x${value.toString(16)}`;
-        const expectation = `expecting ${theType[1]} not`
-        throw new RangeError(
-            `${position} operand out of range - ${expectation} ${displayValue}`
-        );
+    if (theType[0](value)) {
+        return;
     }
+    const positionName = position == 0 ? "first" : "second";
+    const displayValue = `${value} / 0x${value.toString(16)}`;
+    const expectation = `expecting ${theType[1]} not`
+    throw new RangeError(
+        `${positionName} operand out of range - ${expectation} ${displayValue}`
+    );
 };
 
 export const checkCount = (list: Operands, expected: Array<TypeName>) => {

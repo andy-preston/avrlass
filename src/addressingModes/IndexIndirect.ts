@@ -67,7 +67,7 @@ export const encode = (
         return null;
     }
     checkCount(instruction.operands, ["register", "indexOperation"]);
-    check("register", "first", instruction.operands[0]!);
+    check("register", 0, instruction.operands[0]!);
     const [prefix, middle] = prefixAndMiddles[instruction.mnemonic]!;
     const [bit4, suffix] = bit4AndSuffixes[indexOp]!;
     // In the official documentation, the store operations have

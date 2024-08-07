@@ -17,8 +17,8 @@ export const encode = (
         return null;
     }
     checkCount(instruction.operands, ["port", "bitIndex"]);
-    check("port", "first", instruction.operands[0]!);
-    check("bitIndex", "second", instruction.operands[1]!);
+    check("port", 0, instruction.operands[0]!);
+    check("bitIndex", 1, instruction.operands[1]!);
     const operationBits = mappings[instruction.mnemonic]!;
     return template(`1001_10${operationBits}_AAAA_Abbb`, {
         "A": instruction.operands[0],

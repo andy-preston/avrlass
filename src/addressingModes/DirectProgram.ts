@@ -15,7 +15,7 @@ export const encode = (
         return null;
     }
     checkCount(instruction.operands, ["address"]);
-    check("address", "first", instruction.operands[0]!);
+    check("address", 0, instruction.operands[0]!);
     const operationBit = mapping[instruction.mnemonic]!;
     return template(
         `1001_010k_kkkk_11${operationBit}k_kkkk_kkkk_kkkk_kkkk`,

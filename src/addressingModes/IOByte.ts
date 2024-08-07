@@ -22,8 +22,8 @@ export const encode = (
     );
     const register = instruction.operands[registerIndex]!;
     const port = instruction.operands[portIndex]!;
-    check("register", registerIndex == 0 ? "first" : "second", register);
-    check("port", portIndex == 0 ? "first" : "second", port);
+    check("register", registerIndex, register);
+    check("port", portIndex, port);
     return template(`1011_${operationBit}AAd_dddd_AAAA`, {
         "d": register,
         "A": port
