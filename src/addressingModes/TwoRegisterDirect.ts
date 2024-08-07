@@ -2,7 +2,7 @@ import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
 import { check, checkCount } from "../instructions/operands.ts";
 
-const prefixesAndOperands: Record<string, [string, number]> = {
+const mapping: Record<string, [string, number]> = {
     "CPC":  ["0000_01", 2],
     "SBC":  ["0000_10", 2],
     "ADD":  ["0000_11", 2], // LSL and
@@ -25,10 +25,10 @@ export const encode = (
     instruction: Instruction,
     _pc: number
 ): GeneratedCode | null => {
-    if (!(instruction.mnemonic in prefixesAndOperands)) {
+    if (!(instruction.mnemonic in mapping)) {
         return null;
     }
-    const [prefix, operandCount] = prefixesAndOperands[instruction.mnemonic]!;
+    const [prefix, operandCount] = mapping[instruction.mnemonic]!;
     checkCount(
         instruction.operands,
         operandCount == 1 ? ["register"] : ["register", "register"]
