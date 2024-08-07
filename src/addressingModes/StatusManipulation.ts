@@ -23,7 +23,10 @@ const mappings: Record<string, [string, number?]> = {
     "SEI":  ["0", 7]
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in mappings)) {
         return null;
     }

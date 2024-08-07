@@ -25,7 +25,10 @@ const immediate = (mnemonic: string, operand1: number) => {
     }
 }
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in prefixes)) {
         return null;
     }

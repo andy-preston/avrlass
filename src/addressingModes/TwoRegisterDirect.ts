@@ -21,7 +21,10 @@ const prefixesAndOperands: Record<string, [string, number]> = {
     "MUL":  ["1001_11", 2]
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in prefixesAndOperands)) {
         return null;
     }

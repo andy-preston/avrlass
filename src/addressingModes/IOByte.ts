@@ -7,7 +7,10 @@ const mappings: Record<string, [string, number, number]> = {
     "OUT": ["1", 1, 0]
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in mappings)) {
         return null;
     }

@@ -10,7 +10,10 @@ const mapping: Record<string, string> = {
     "SBRS": "11"
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in mapping)) {
         return null;
     }

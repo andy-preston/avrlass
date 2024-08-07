@@ -9,7 +9,10 @@ const mappings: Record<string, string> = {
     "CBI":  "00",
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in mappings)) {
         return null;
     }

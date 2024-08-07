@@ -27,7 +27,10 @@ const mappings: Record<string, [string, number?]> = {
     "BRIE": ["0", 7]
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in mappings)) {
         return null;
     }

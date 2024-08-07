@@ -19,7 +19,10 @@ const mappings: Record<string, string> = {
     "WDR":    "1001_0101_1010_1000",
 };
 
-export const encode = (instruction: Instruction): GeneratedCode | null => {
+export const encode = (
+    instruction: Instruction,
+    _pc: number
+): GeneratedCode | null => {
     if (!(instruction.mnemonic in mappings)) {
         return null;
     }
