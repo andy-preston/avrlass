@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { check } from "../instructions/operands.ts";
+import { check, registerPair } from "../instructions/operands.ts";
 import { checkCount } from "../instructions/operands.ts";
 
 const mapping: Record<string, string> = {
@@ -23,7 +23,7 @@ export const encode = (
     check("sixBits", 1, instruction.operands[1]!);
     const operationBit = mapping[instruction.mnemonic]!;
     return template(`1001_011${operationBit}_KKdd_KKKK`, {
-        "d": (instruction.operands[0]! - 24) / 2,
+        "d": registerPair(instruction.operands[0]!, 24),
         "K": instruction.operands[1]
     });
 };
