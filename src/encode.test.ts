@@ -1,5 +1,7 @@
 import { assertEquals } from "assert";
 import { encode } from "./encode.ts";
+import { GeneratedCode } from "./instructions/binaryTemplate.ts";
+import { Operands } from "./instructions/operands.ts";
 
 const R0 = 0;
 const R1 = 1;
@@ -30,9 +32,8 @@ const R31 = 31;
 const Z = R30;
 const branch = 0x00000C;
 // cSpell:words GAVRAsm
-//
 
-type Expected = [number, Array<number>, string, Array<number>];
+type Expected = [number, GeneratedCode, string, Operands];
 
 // The initial test results come from assembly with the last edition of
 // GAVRAsm that I could get hold of.
