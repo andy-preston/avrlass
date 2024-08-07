@@ -1,6 +1,6 @@
 import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
 import { Instruction } from "../instructions/instruction.ts";
-import { check, checkCount } from "../instructions/operands.ts";
+import { check, checkCount, registerFrom16 } from "../instructions/operands.ts";
 
 const prefixes: Record<string, string> = {
     "CPI":  "0011",
@@ -43,8 +43,7 @@ export const encode = (
     }
     const prefix = prefixes[instruction.mnemonic]!;
     return template(`${prefix}_KKKK_dddd_KKKK`, {
-        // Immediate instructions only operate on R16 - R31
-        "d": instruction.operands[0]! - 16,
+        "d": registerFrom16(instruction.operands[0]!),
         "K": immediate(instruction.mnemonic, instruction.operands[1]!)
     });
 };

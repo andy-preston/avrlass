@@ -79,3 +79,5 @@ export const checkCount = (list: Operands, expected: Array<TypeName>) => {
         throw new Error(`Incorrect operands - expecting ${descriptions}`);
     }
 };
+
+export const registerFrom16 = (register: number): number => register - 16;
