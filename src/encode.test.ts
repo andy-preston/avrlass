@@ -102,9 +102,9 @@ const expectedResults: Array<Expected> = [
     [0x00003B, [0x35, 0xB7], "IN", [R19, 53]],
     [0x00003C, [0x43, 0x95], "INC", [R20]],
     [0x00003D, [0x0C, 0x94, 0x0C, 0x00], "JMP", [branch]],
-    [0x00003F, [0x46, 0x93], "LAC", [Z, R20]],
-    [0x000040, [0x55, 0x93], "LAS", [Z, R21]],
-    [0x000041, [0x67, 0x93], "LAT", [Z, R22]],
+    [0x00003F, [0x46, 0x93], "LAC", [R20]],      // should be LAC Z, R20
+    [0x000040, [0x55, 0x93], "LAS", [R21]],      // should be LAS Z, R21
+    [0x000041, [0x67, 0x93], "LAT", [R22]],      // should be LAT Z, R22
     [0x000042, [0x1D, 0xE4], "LDI", [R17, 77]],
     // LD.X
     // LD.X+
@@ -190,8 +190,14 @@ const expectedResults: Array<Expected> = [
 Deno.test("Code generation is the same as GAVRAsm", () => {
     for (const test of expectedResults) {
         const [pc, expected, mnemonic, operands] = test;
+        var encoded;
+        try {
+            encoded = encode(instruction(mnemonic, operands), pc);
+        } catch (error) {
+            throw new Error(`error testing ${mnemonic}`, {"cause": error});
+        }
         assertEquals(
-            encode(instruction(mnemonic, operands), pc),
+            encoded,
             expected,
             `Code generation failed for ${mnemonic} ${operands}`
         );

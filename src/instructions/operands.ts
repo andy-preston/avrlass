@@ -88,7 +88,7 @@ export const checkCount = (list: Operands, expected: Array<TypeName>) => {
         const descriptions = expected.length == 0 ?
             "none" :
             expected.map(description).join(" and ");
-        throw new Error(`Incorrect operands - expecting ${descriptions}`);
+        throw new Error(`Incorrect number of operands - expecting ${descriptions} got ${list}`);
     }
 };
 

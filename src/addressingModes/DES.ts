@@ -6,7 +6,7 @@ export const encode = (
     instruction: Instruction,
     _pc: number
 ): GeneratedCode | null => {
-    if (!(instruction.mnemonic != "DES")) {
+    if (instruction.mnemonic != "DES") {
         return null;
     }
     checkCount(instruction.operands, ["nybble"]);
