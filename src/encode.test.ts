@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
-import { encode } from "./encode.ts";
 import { GeneratedCode } from "./instructions/binaryTemplate.ts";
 import { Operands } from "./instructions/operands.ts";
+import { encode, instruction } from "./instructions/instruction.ts";
 
 const R0 = 0;
 const R1 = 1;
@@ -191,7 +191,7 @@ Deno.test("Code generation is the same as GAVRAsm", () => {
     for (const test of expectedResults) {
         const [pc, expected, mnemonic, operands] = test;
         assertEquals(
-            encode(pc, mnemonic, operands),
+            encode(instruction(mnemonic, operands), pc),
             expected,
             `Code generation failed for ${mnemonic} ${operands}`
         );
