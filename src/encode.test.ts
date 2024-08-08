@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
 import { GeneratedCode } from "./binaryTemplate.ts";
 import { Operands } from "./operands.ts";
-import { encode, instruction } from "./instruction.ts";
+import { encode, Instruction, instruction } from "./instruction.ts";
 
 const R0 = 0;
 const R1 = 1;
@@ -155,10 +155,8 @@ const expectedResults: Array<Expected> = [
     [0x000064, [0x58, 0x94], "SEH", []],
     [0x000065, [0x78, 0x94], "SEI", []],
     [0x000066, [0x28, 0x94], "SEN", []],
-
     [0x000067, [0x3F, 0xEF], "LDI", [R19, 255]],
     [0x000067, [0x3F, 0xEF], "SER", [R19]],
-
     [0x000068, [0x48, 0x94], "SES", []],
     [0x000069, [0x68, 0x94], "SET", []],
     [0x00006A, [0x38, 0x94], "SEV", []],
@@ -187,17 +185,25 @@ const expectedResults: Array<Expected> = [
     // XCH.Z
 ];
 
+const testEncode = (
+    instruction: Instruction,
+    pc: number
+): GeneratedCode | null => {
+    try {
+        return encode(instruction, pc);
+    } catch (error) {
+        throw new Error(
+            `error testing ${instruction.mnemonic}`,
+            {"cause": error}
+        );
+    }
+};
+
 Deno.test("Code generation is the same as GAVRAsm", () => {
     for (const test of expectedResults) {
         const [pc, expected, mnemonic, operands] = test;
-        var encoded;
-        try {
-            encoded = encode(instruction(mnemonic, operands), pc);
-        } catch (error) {
-            throw new Error(`error testing ${mnemonic}`, {"cause": error});
-        }
         assertEquals(
-            encoded,
+            testEncode(instruction(mnemonic, operands), pc),
             expected,
             `Code generation failed for ${mnemonic} ${operands}`
         );
