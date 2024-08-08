@@ -1,7 +1,7 @@
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { registerFrom16 } from "../instructions/operands.ts";
-import { check, checkCount, OperandIndex, TypeName } from "../instructions/operands.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { Instruction } from "../instruction.ts";
+import { registerFrom16 } from "../operands.ts";
+import { check, checkCount, OperandIndex, TypeName } from "../operands.ts";
 
 // I am not completely sure at this point how these instructions work
 // there appear to be two versions, and I'm assuming that one operates on

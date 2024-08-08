@@ -1,6 +1,6 @@
-import { Instruction } from "../instructions/instruction.ts";
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { check, checkCount, OperandIndex } from "../instructions/operands.ts";
+import { Instruction } from "../instruction.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { check, checkCount, OperandIndex } from "../operands.ts";
 
 const mappings: Record<string, [string, OperandIndex, OperandIndex]> = {
     "IN":  ["0", 0, 1],

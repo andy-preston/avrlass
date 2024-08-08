@@ -1,6 +1,6 @@
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { check, checkCount } from "../instructions/operands.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { Instruction } from "../instruction.ts";
+import { check, checkCount } from "../operands.ts";
 
 const mappings: Record<string, [string, number?]> = {
     "BCLR": ["1", undefined],

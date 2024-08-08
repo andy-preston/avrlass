@@ -1,6 +1,6 @@
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { check, checkCount, registerFrom16 } from "../instructions/operands.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { Instruction } from "../instruction.ts";
+import { check, checkCount, registerFrom16 } from "../operands.ts";
 
 const prefixes: Record<string, string> = {
     "CPI":  "0011",

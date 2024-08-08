@@ -1,7 +1,7 @@
 import { relativeJump } from "../binaryMapping.ts";
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { check, checkCount } from "../instructions/operands.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { Instruction } from "../instruction.ts";
+import { check, checkCount } from "../operands.ts";
 
 const mapping: Record<string, string> = {
     "RCALL": "1",

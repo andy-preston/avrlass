@@ -1,8 +1,8 @@
 import { relativeJump } from "../binaryMapping.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { GeneratedCode } from "../instructions/binaryTemplate.ts";
-import { template } from "../instructions/binaryTemplate.ts";
-import { check, checkCount } from "../instructions/operands.ts";
+import { Instruction } from "../instruction.ts";
+import { GeneratedCode } from "../binaryTemplate.ts";
+import { template } from "../binaryTemplate.ts";
+import { check, checkCount } from "../operands.ts";
 
 const mappings: Record<string, [string, number?]> = {
     "BRBC": ["1", undefined],

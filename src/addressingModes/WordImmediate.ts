@@ -1,7 +1,7 @@
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { check, registerPair } from "../instructions/operands.ts";
-import { checkCount } from "../instructions/operands.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { Instruction } from "../instruction.ts";
+import { check, registerPair } from "../operands.ts";
+import { checkCount } from "../operands.ts";
 
 const mapping: Record<string, string> = {
     "ADIW": "0",

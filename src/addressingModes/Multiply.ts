@@ -1,7 +1,7 @@
-import { GeneratedCode, template } from "../instructions/binaryTemplate.ts";
-import { Instruction } from "../instructions/instruction.ts";
-import { registerFrom16 } from "../instructions/operands.ts";
-import { check, checkCount, TypeName } from "../instructions/operands.ts";
+import { GeneratedCode, template } from "../binaryTemplate.ts";
+import { Instruction } from "../instruction.ts";
+import { registerFrom16 } from "../operands.ts";
+import { check, checkCount, TypeName } from "../operands.ts";
 
 const mapping: Record<string, [string, string]> = {
     "FMUL":   ["1_0", "1"],

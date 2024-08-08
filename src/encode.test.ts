@@ -1,7 +1,7 @@
 import { assertEquals } from "assert";
-import { GeneratedCode } from "./instructions/binaryTemplate.ts";
-import { Operands } from "./instructions/operands.ts";
-import { encode, instruction } from "./instructions/instruction.ts";
+import { GeneratedCode } from "./binaryTemplate.ts";
+import { Operands } from "./operands.ts";
+import { encode, instruction } from "./instruction.ts";
 
 const R0 = 0;
 const R1 = 1;
