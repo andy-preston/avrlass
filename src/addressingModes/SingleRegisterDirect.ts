@@ -2,36 +2,46 @@ import { GeneratedCode, template } from "../binaryTemplate.ts";
 import { Instruction } from "../instruction.ts";
 import { check, checkCount } from "../operands.ts";
 
-const prefixAndSuffixes: Record<string, [string, string]> = {
-    "POP":     ["1001_000", "1111"],
-    "LAC":     ["1001_001", "0110"],
-    "LAS":     ["1001_001", "0101"],
-    "LAT":     ["1001_001", "0111"],
-    "COM":     ["1001_010", "0000"],
-    "NEG":     ["1001_010", "0001"],
-    "SWAP":    ["1001_010", "0010"],
-    "INC":     ["1001_010", "0011"],
-    "ASR":     ["1001_010", "0101"],
-    "LSR":     ["1001_010", "0110"],
-    "ROR":     ["1001_010", "0111"],
-    "DEC":     ["1001_010", "1010"],
-    "PUSH":    ["1001_001", "1111"],
+const mapping: Record<string, [string, string]> = {
+    "POP":     ["00", "1111"],
+    "LAC":     ["01", "0110"],
+    "LAS":     ["01", "0101"],
+    "LAT":     ["01", "0111"],
+    "COM":     ["10", "0000"],
+    "NEG":     ["10", "0001"],
+    "SWAP":    ["10", "0010"],
+    "INC":     ["10", "0011"],
+    "ASR":     ["10", "0101"],
+    "LSR":     ["10", "0110"],
+    "ROR":     ["10", "0111"],
+    "DEC":     ["10", "1010"],
+    "PUSH":    ["01", "1111"],
 };
 
 export const encode = (
     instruction: Instruction,
     _pc: number
 ): GeneratedCode | null => {
-    if (!(instruction.mnemonic in prefixAndSuffixes)) {
+    if (!(instruction.mnemonic in mapping)) {
         return null;
     }
-    checkCount(instruction.operands, ["register"]);
-    check("register", 0, instruction.operands[0]!);
-    const [prefix, suffix] = prefixAndSuffixes[instruction.mnemonic]!;
+    const usesZ = ["LAC", "LAS", "LAT"].includes(instruction.mnemonic);
+    checkCount(
+        instruction.operands,
+        usesZ ? ["Z", "register"] : ["register"]
+    );
+    if (usesZ) {
+        check("Z", 0, instruction.operands[0]!);
+        check("register", 1, instruction.operands[1]!);
+    } else {
+        check("register", 0, instruction.operands[0]!);
+    }
+    const register = instruction.operands[usesZ ? 1 : 0];
+    const [operationBits, suffix] = mapping[instruction.mnemonic]!;
     // In the official documentation, some of these have
     // "#### ###r rrrr ####" as their template rather than "d dddd".
     // e.g. `SWAP Rd` has "d dddd" but `LAC Rd` has "r rrrr".
-    return template(`${prefix}d_dddd_${suffix}`, {
-        "d": instruction.operands[0]
+    return template(`1001_0${operationBits}d_dddd_${suffix}`, {
+        "d": register
     });
 };

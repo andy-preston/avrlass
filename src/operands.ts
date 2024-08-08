@@ -19,11 +19,15 @@ const types = {
     ],
     "registerPair": [
         (operand: number) => [24, 26, 28, 30].includes(operand),
-        "register pair (R24, R26, R28, R30)"
+        "register pair (R24:R25, R26:R27, R28:29, R30:R31)"
     ],
     "anyRegisterPair": [
         (operand: number) => operand >= 0 && operand <= 30 && operand % 2 == 0,
-        "any register pair (R0 - R30 - even only)"
+        "any register pair (R0:R1 - R30:R31)"
+    ],
+    "Z": [
+        (operand: number) => operand == 30,
+        "Z Register only (R30:R31)"
     ],
     "port": [
         (operand: number) => operand >= 0 && operand <= 0x3f,
